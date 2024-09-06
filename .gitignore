@@ -1,0 +1,4 @@
+#ignores compiled executables and generates .txt and .bin files
+*.out
+*.txt
+*.bin
