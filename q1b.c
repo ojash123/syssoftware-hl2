@@ -30,7 +30,7 @@ int main(){
     sleep(15);
     getitimer(ITIMER_VIRTUAL, &itv);
     printf("%ld secs and %ld usecs left\nEntering infinite loop\n", itv.it_value.tv_sec, itv.it_value.tv_usec);
-    while(1);
+    while(1); // could use wait instead
 
 }
 
@@ -38,6 +38,6 @@ int main(){
 $ ./a.out 
 Sleeping for 15 secs
 10 secs and 1010 usecs left
-Entering infinite loop
+Entering infinite loop 
 Virtual timer expired
 */
