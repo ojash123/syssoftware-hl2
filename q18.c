@@ -9,27 +9,38 @@ execute ls -l | grep ^d | wc ? Use only dup2.
 int main(){
     int p1[2], p2[2];
     pipe(p1);
-    pipe(p2);
-    if(fork() > 0){
+    
+    if(fork() == 0){
         close(p1[0]);
         //printf("Child\n");
         dup2(p1[1], 1);
         execlp("ls", "ls", "-l", NULL);
-    }else{
-        if(fork() > 0){
-            close(p1[1]);
-            close(p2[0]);
-            dup2(p1[0], 0);
-            //printf("Child 1\n");
-            dup2(p2[1], 1);
-            
-            execlp("grep", "grep", "^d", NULL);
-
-        }else{
-            close(p2[1]);
-            dup2(p2[0], 0);
-            //printf("Child 2\n");
-            execlp("wc", "wc", NULL);
-        }
     }
+    pipe(p2);
+    if(fork() == 0){
+        close(p1[1]);
+        close(p2[0]);
+        dup2(p1[0], 0);
+        //printf("Child 1\n");
+        dup2(p2[1], 1);
+            
+        execlp("grep", "grep", "^d", NULL);
+    }
+    close(p1[0]);
+    close(p1[1]);
+    if(fork() == 0){
+        close(p2[1]);
+        dup2(p2[0], 0);
+        //printf("Child 2\n");
+        execlp("wc", "wc", NULL);
+    }
+    close(p2[0]);
+    close(p2[1]);
 }
+/*
+$ ls -l | grep ^d | wc 
+      0       0       0
+      
+$ ./a.out 
+      0       0       0
+*/
