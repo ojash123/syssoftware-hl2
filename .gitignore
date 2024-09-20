@@ -4,3 +4,4 @@
 *.bin
 .vscode/
 *fifo*
+q32a
